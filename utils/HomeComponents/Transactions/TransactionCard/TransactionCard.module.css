@@ -1,0 +1,43 @@
+.TCContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  max-width: 500px;
+  height: 100px;
+  padding-bottom: 20px;
+}
+.TCContainerInner {
+  background-color: white;
+  width: 98%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  box-shadow: 4px 2px 18px 1px rgba(0,0,0,0.06);
+  -webkit-box-shadow: 4px 2px 18px 1px rgba(0,0,0,0.06);
+  -moz-box-shadow: 4px 2px 18px 1px rgba(0,0,0,0.06);
+}
+.TCContent {
+  width: 96%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+.TIContainer {
+  width: 40px;
+  height: 40px;
+  background-color: white;
+  border-radius: 100%;
+  display: flex;
+  justify-content: center;
+  margin-left: 10px;
+  align-items: center;
+  box-shadow: 4px 2px 18px 1px rgba(0,0,0,0.06);
+  -webkit-box-shadow: 4px 2px 18px 1px rgba(0,0,0,0.06);
+  -moz-box-shadow: 4px 2px 18px 1px rgba(0,0,0,0.06);
+}
+.TDContainer {
+  margin-left: 20px;
+}

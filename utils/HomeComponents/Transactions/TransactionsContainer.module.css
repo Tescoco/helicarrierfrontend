@@ -1,0 +1,13 @@
+.TCContainer {
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
+.TCRow {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.TDContainer {
+  padding-bottom: 10px;
+}

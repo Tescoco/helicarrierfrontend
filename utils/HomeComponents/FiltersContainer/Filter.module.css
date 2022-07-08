@@ -1,0 +1,10 @@
+.FContainer {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-right: 10px;
+}
+.FContainerInner {
+  padding: 10px 10px 10px 10px;
+  border: 1px solid black;
+  border-radius: 4px;
+}
