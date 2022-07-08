@@ -1,18 +1,22 @@
 import React from "react";
+import { Transactions } from "../../../pages";
 import TransactionCard from "./TransactionCard/TransactionCard";
 import TransactionDate from "./TransactionDate";
 import styles from "./TransactionsContainer.module.css";
 
-type Props = {};
+type Props = {
+  date: string;
+  transaction: any; //Transactions[];
+};
 
-function TransactionsContainer({}: Props) {
+function TransactionsContainer({ date, transaction }: Props) {
   return (
     <div className={styles.TCContainer}>
-      <TransactionDate />
+      <TransactionDate date={date} />
       <div className={styles.TCRow}>
-        <TransactionCard />
-        <TransactionCard />
-        <TransactionCard />
+        {transaction.map((data, i) => (
+          <TransactionCard data={data} key={i} />
+        ))}
       </div>
     </div>
   );

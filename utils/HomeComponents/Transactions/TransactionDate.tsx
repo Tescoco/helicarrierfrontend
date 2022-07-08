@@ -1,10 +1,12 @@
 import React from "react";
 import styles from "./TransactionsContainer.module.css";
 
-type Props = {};
+type Props = {
+  date: string;
+};
 
-function TransactionDate({}: Props) {
-  return <div className={styles.TDContainer}>07-08-2022</div>;
+function TransactionDate({ date }: Props) {
+  return <div className={styles.TDContainer}>{date}</div>;
 }
 
 export default TransactionDate;
