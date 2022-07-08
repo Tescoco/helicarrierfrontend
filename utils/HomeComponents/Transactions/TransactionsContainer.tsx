@@ -6,7 +6,7 @@ import styles from "./TransactionsContainer.module.css";
 
 type Props = {
   date: string;
-  transaction: any; //Transactions[];
+  transaction: Transactions[];
 };
 
 function TransactionsContainer({ date, transaction }: Props) {

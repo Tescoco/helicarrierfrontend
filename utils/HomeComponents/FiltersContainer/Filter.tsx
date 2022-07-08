@@ -1,12 +1,20 @@
-import React from "react";
+import React, { useContext } from "react";
+import { TransactionsContext } from "../../context/TransactionsContext";
 import styles from "./Filter.module.css";
 
-type Props = {};
+type Props = {
+  type: string;
+};
 
-function Filter({}: Props) {
+function Filter({ type }: Props) {
+  // consuming context Api
+  const { filterArray } = useContext(TransactionsContext);
+
   return (
     <div className={styles.FContainer}>
-      <div className={styles.FContainerInner}>Filter</div>
+      <div onClick={() => filterArray(type)} className={styles.FContainerInner}>
+        {type}
+      </div>
     </div>
   );
 }

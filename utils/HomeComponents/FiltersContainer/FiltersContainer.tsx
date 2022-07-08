@@ -7,12 +7,13 @@ type Props = {};
 function FiltersContainer({}: Props) {
   return (
     <div className={styles.FCContainer}>
-      <Filter />
-      <Filter />
-      <Filter />
-      <Filter />
-      <Filter />
-      <Filter />
+      <Filter type={"credit"} />
+      <Filter type={"debit"} />
+      <Filter type={"completed"} />
+      <Filter type={"pending"} />
+      <Filter type={"canceled"} />
+      <Filter type={"USD"} />
+      <Filter type={"NGN"} />
     </div>
   );
 }

@@ -22,7 +22,7 @@ const Home: NextPage = () => {
   const data: Transactions[] = [
     {
       id: 1,
-      status: "completed",
+      status: "canceled",
       date: "09-18-1960",
       amount: "100",
       type: "credit",
@@ -31,7 +31,7 @@ const Home: NextPage = () => {
     },
     {
       id: 2,
-      status: "completed",
+      status: "pending",
       date: "08-18-1960",
       amount: "100",
       type: "debit",
@@ -59,35 +59,78 @@ const Home: NextPage = () => {
   ];
 
   const sortByDate = (data: Transactions[]) => {
-    let sort = data.reduce((store, transaction) => {
+    let sort = data.reduce((accumulator, transaction) => {
       let key = transaction.date;
 
-      // store is used to group arrays with same date together
-      // if store[key] is undefined (means that the date is not in the array)
+      // accumulator is used to group arrays with same date together
+      // if accumulator[key] is undefined (means that the date is not in the array)
       // we use an empty array instead
-      // now we assign store[key] to another transaction (with the same date) with the same date using concat
-      store[key] = (store[key] || []).concat(transaction);
+      // now we assign accumulator[key] to bundle a transaction (with the same date) using concat
+      accumulator[key] = (accumulator[key] || []).concat(transaction);
 
-      return store;
+      return accumulator;
     }, {});
 
     //turn the sort into an array
-
     let sortArray = Object.entries(sort).map((k) => k);
     return sortArray;
   };
 
-  useEffect(() => {
-    setSortedTransactions(sortByDate(data));
-  }, []);
-
   const [sortedTransactions, setSortedTransactions] =
-    useState<SortedTransactions>([]);
+    useState<SortedTransactions>(sortByDate(data));
   const [filters, setFilters] = useState([]);
   const [activeFilters, setActiveFilters] = useState([]);
 
+  const filterByType = (type: string) => {
+    let filteredTransactions = [];
+    for (let i = 0; i < data.length; i++) {
+      if (data[i].type === type) {
+        filteredTransactions.push(data[i]);
+      }
+    }
+    return sortByDate(filteredTransactions);
+  };
+
+  const filterByStatus = (status: string) => {
+    let filteredTransactions = [];
+    for (let i = 0; i < data.length; i++) {
+      if (data[i].status === status) {
+        filteredTransactions.push(data[i]);
+      }
+    }
+    return sortByDate(filteredTransactions);
+  };
+
+  const filterByCurrency = (currency: string) => {
+    let filteredTransactions = [];
+    for (let i = 0; i < data.length; i++) {
+      if (data[i].currency === currency) {
+        filteredTransactions.push(data[i]);
+      }
+    }
+    return sortByDate(filteredTransactions);
+  };
+
+  const filterArray = (filter: string) => {
+    switch (filter) {
+      case "credit":
+      case "debit":
+        setSortedTransactions(filterByType(filter));
+        break;
+      case "completed":
+      case "pending":
+      case "canceled":
+        setSortedTransactions(filterByStatus(filter));
+        break;
+      case "USD":
+      case "NGN":
+        setSortedTransactions(filterByCurrency(filter));
+        break;
+    }
+  };
+
   return (
-    <TransactionsContext.Provider value={{ e: "transactions" }}>
+    <TransactionsContext.Provider value={{ filterArray }}>
       <div className={styles.container}>
         <div className={styles.containerInner}>
           <SearchInput />
