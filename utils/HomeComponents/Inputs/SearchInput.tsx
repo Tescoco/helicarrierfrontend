@@ -10,7 +10,7 @@ type combinedDataType = {
 }[];
 
 function SearchInput({}) {
-  const { data, setSortedTransactions, sortByDate } =
+  const { transactions, setSortedTransactions, sortByDate } =
     useContext(TransactionsContext);
   const [combinedData, setCombinedData] = useState<combinedDataType>([]);
 
@@ -18,12 +18,12 @@ function SearchInput({}) {
     //combine array of transactions and filter it'
     let combinedData: combinedDataType = [];
 
-    for (let i = 0; i < data.length; i++) {
+    for (let i = 0; i < transactions.length; i++) {
       const transaction = {
-        id: data[i].id,
+        id: transactions[i].id,
         search:
-          `${data[i].amount} ${data[i].currency} ${data[i].type} ${data[i].status} ${data[i].name}`.toLocaleLowerCase(),
-        raw: data[i],
+          `${transactions[i].currency} ${transactions[i].currencyIcon} ${transactions[i].amount} ${transactions[i].type} ${transactions[i].name} ${transactions[i].status}`.toLocaleLowerCase(),
+        raw: transactions[i],
       };
       combinedData.push(transaction);
     }

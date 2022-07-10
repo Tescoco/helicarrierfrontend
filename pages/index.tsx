@@ -5,6 +5,7 @@ import { TransactionsContext } from "../utils/context/TransactionsContext";
 import FiltersContainer from "../utils/HomeComponents/FiltersContainer/FiltersContainer";
 import SearchInput from "../utils/HomeComponents/Inputs/SearchInput";
 import TransactionsContainer from "../utils/HomeComponents/Transactions/TransactionsContainer";
+import { ApolloClient, InMemoryCache, gql, useQuery } from "@apollo/client";
 
 export interface Transactions {
   id: number;
@@ -20,68 +21,20 @@ export interface Transactions {
 export type SortedTransactions = [string, Transactions[]][];
 
 const Home: NextPage = () => {
-  const data: Transactions[] = [
+  const GET_TRANSACTIONS = gql`
     {
-      id: 1,
-      status: "canceled",
-      date: "09-18-1960",
-      amount: "1000",
-      type: "credit",
-      name: "John Doe",
-      currency: "NGN",
-      currencyIcon: "₦",
-    },
-    {
-      id: 2,
-      status: "pending",
-      date: "08-18-1960",
-      amount: "230",
-      type: "debit",
-      name: "Amazon Prime",
-      currency: "NGN",
-      currencyIcon: "₦",
-    },
-    {
-      id: 3,
-      status: "pending",
-      date: "08-18-1960",
-      amount: "20",
-      type: "credit",
-      name: "Oladapo BabaTunde",
-      currency: "NGN",
-      currencyIcon: "₦",
-    },
-    {
-      id: 4,
-      status: "completed",
-      date: "08-19-1963",
-      amount: "3000",
-      type: "credit",
-      name: "Teslim Akinremi",
-      currency: "NGN",
-      currencyIcon: "₦",
-    },
-    {
-      id: 5,
-      status: "pending",
-      date: "08-19-1963",
-      amount: "3000",
-      type: "credit",
-      name: "Ademide Akinremi",
-      currency: "USD",
-      currencyIcon: "$",
-    },
-    {
-      id: 6,
-      status: "completed",
-      date: "08-19-1963",
-      amount: "390",
-      type: "debit",
-      name: "John Doe",
-      currency: "USD",
-      currencyIcon: "$",
-    },
-  ];
+      Transaction(limit: $limit) {
+        id
+        status
+        date
+        amount
+        type
+        name
+        currency
+        currencyIcon
+      }
+    }
+  `;
 
   const sortByDate = (data: Transactions[]) => {
     let sort = data.reduce((accumulator: any, transaction) => {
@@ -97,19 +50,37 @@ const Home: NextPage = () => {
     }, {});
 
     //turn the sort into an array
-    console.log(sort);
     let sortArray: any = Object.entries(sort).map((k) => k);
     return sortArray;
   };
 
   const [sortedTransactions, setSortedTransactions] =
-    useState<SortedTransactions>(sortByDate(data));
+    useState<SortedTransactions>([]);
+
+  const [transactions, setTransactions] = useState<Transactions[]>([]);
+
+  const client = new ApolloClient({
+    uri: "http://localhost:5000/graphql",
+    cache: new InMemoryCache(),
+  });
+
+  useEffect(() => {
+    client
+      .query({
+        query: GET_TRANSACTIONS,
+        variables: { limit: 3 },
+      })
+      .then((result) => {
+        setTransactions([result.data.Transaction]);
+        setSortedTransactions(sortByDate([result.data.Transaction]));
+      });
+  }, []);
 
   const filterByType = (type: string) => {
     let filteredTransactions = [];
-    for (let i = 0; i < data.length; i++) {
-      if (data[i].type === type) {
-        filteredTransactions.push(data[i]);
+    for (let i = 0; i < transactions.length; i++) {
+      if (transactions[i].type === type) {
+        filteredTransactions.push(transactions[i]);
       }
     }
     return sortByDate(filteredTransactions);
@@ -117,9 +88,9 @@ const Home: NextPage = () => {
 
   const filterByStatus = (status: string) => {
     let filteredTransactions = [];
-    for (let i = 0; i < data.length; i++) {
-      if (data[i].status === status) {
-        filteredTransactions.push(data[i]);
+    for (let i = 0; i < transactions.length; i++) {
+      if (transactions[i].status === status) {
+        filteredTransactions.push(transactions[i]);
       }
     }
     return sortByDate(filteredTransactions);
@@ -127,9 +98,9 @@ const Home: NextPage = () => {
 
   const filterByCurrency = (currency: string) => {
     let filteredTransactions = [];
-    for (let i = 0; i < data.length; i++) {
-      if (data[i].currency === currency) {
-        filteredTransactions.push(data[i]);
+    for (let i = 0; i < transactions.length; i++) {
+      if (transactions[i].currency === currency.toUpperCase()) {
+        filteredTransactions.push(transactions[i]);
       }
     }
     return sortByDate(filteredTransactions);
@@ -138,7 +109,7 @@ const Home: NextPage = () => {
   const filterArray = (filter: string) => {
     switch (filter) {
       case "all":
-        setSortedTransactions(sortByDate(data));
+        setSortedTransactions(sortByDate(transactions));
         break;
       case "credit":
       case "debit":
@@ -149,8 +120,8 @@ const Home: NextPage = () => {
       case "canceled":
         setSortedTransactions(filterByStatus(filter));
         break;
-      case "USD":
-      case "NGN":
+      case "usd":
+      case "ngn":
         setSortedTransactions(filterByCurrency(filter));
         break;
     }
@@ -158,7 +129,7 @@ const Home: NextPage = () => {
 
   return (
     <TransactionsContext.Provider
-      value={{ filterArray, data, setSortedTransactions, sortByDate }}
+      value={{ filterArray, transactions, setSortedTransactions, sortByDate }}
     >
       <div className={styles.container}>
         <div className={styles.containerInner}>

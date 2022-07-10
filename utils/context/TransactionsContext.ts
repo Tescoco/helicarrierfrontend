@@ -3,14 +3,14 @@ import { SortedTransactions, Transactions } from "../../pages";
 
 interface defaultValue {
   filterArray: (value: string) => void;
-  data: Transactions[];
+  transactions: Transactions[];
   setSortedTransactions: (value: SortedTransactions) => void;
   sortByDate: (value: Transactions[]) => any;
 }
 
 const defaultValue: defaultValue = {
   filterArray: () => {},
-  data: [],
+  transactions: [],
   setSortedTransactions: () => {},
   sortByDate: () => {},
 };
