@@ -5,15 +5,21 @@ import styles from "./FilterContainer.module.css";
 type Props = {};
 
 function FiltersContainer({}: Props) {
+  const filterArray = [
+    "All",
+    "Credit",
+    "Debit",
+    "Pending",
+    "Completed",
+    "Canceled",
+    "USD",
+    "NGN",
+  ];
   return (
     <div className={styles.FCContainer}>
-      <Filter type={"credit"} />
-      <Filter type={"debit"} />
-      <Filter type={"completed"} />
-      <Filter type={"pending"} />
-      <Filter type={"canceled"} />
-      <Filter type={"USD"} />
-      <Filter type={"NGN"} />
+      {filterArray.map((type, i) => (
+        <Filter key={i} type={type} />
+      ))}
     </div>
   );
 }

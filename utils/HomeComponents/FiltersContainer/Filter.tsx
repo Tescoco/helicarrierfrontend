@@ -12,7 +12,10 @@ function Filter({ type }: Props) {
 
   return (
     <div className={styles.FContainer}>
-      <div onClick={() => filterArray(type)} className={styles.FContainerInner}>
+      <div
+        onClick={() => filterArray(type.toLocaleLowerCase())}
+        className={styles.FContainerInner}
+      >
         {type}
       </div>
     </div>

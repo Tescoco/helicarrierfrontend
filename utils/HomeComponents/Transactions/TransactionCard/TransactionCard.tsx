@@ -13,8 +13,8 @@ function TransactionCard({ data }: Props) {
     <div className={styles.TCContainer}>
       <div className={styles.TCContainerInner}>
         <div className={styles.TCContent}>
-          <TransactionIcon />
-          <TransactionDetails />
+          <TransactionIcon type={data.type} />
+          <TransactionDetails data={data} />
         </div>
       </div>
     </div>

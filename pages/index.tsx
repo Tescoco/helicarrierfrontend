@@ -14,6 +14,7 @@ export interface Transactions {
   type: string;
   name: string;
   currency: string;
+  currencyIcon: string;
 }
 
 type SortedTransactions = [string, Transactions[]][];
@@ -24,37 +25,61 @@ const Home: NextPage = () => {
       id: 1,
       status: "canceled",
       date: "09-18-1960",
-      amount: "100",
+      amount: "1000",
       type: "credit",
       name: "John Doe",
       currency: "NGN",
+      currencyIcon: "₦",
     },
     {
       id: 2,
       status: "pending",
       date: "08-18-1960",
-      amount: "100",
+      amount: "230",
       type: "debit",
-      name: "John Doe",
+      name: "Amazon Prime",
       currency: "NGN",
+      currencyIcon: "₦",
     },
     {
       id: 3,
       status: "pending",
       date: "08-18-1960",
-      amount: "100",
+      amount: "20",
       type: "credit",
-      name: "John Doe",
+      name: "Oladapo BabaTunde",
       currency: "NGN",
+      currencyIcon: "₦",
     },
     {
       id: 4,
       status: "completed",
       date: "08-19-1963",
-      amount: "100",
+      amount: "3000",
       type: "credit",
-      name: "John Doe",
+      name: "Teslim Akinremi",
       currency: "NGN",
+      currencyIcon: "₦",
+    },
+    {
+      id: 5,
+      status: "pending",
+      date: "08-19-1963",
+      amount: "3000",
+      type: "credit",
+      name: "Ademide Akinremi",
+      currency: "USD",
+      currencyIcon: "$",
+    },
+    {
+      id: 6,
+      status: "completed",
+      date: "08-19-1963",
+      amount: "390",
+      type: "debit",
+      name: "John Doe",
+      currency: "USD",
+      currencyIcon: "$",
     },
   ];
 
@@ -78,8 +103,6 @@ const Home: NextPage = () => {
 
   const [sortedTransactions, setSortedTransactions] =
     useState<SortedTransactions>(sortByDate(data));
-  const [filters, setFilters] = useState([]);
-  const [activeFilters, setActiveFilters] = useState([]);
 
   const filterByType = (type: string) => {
     let filteredTransactions = [];
@@ -113,6 +136,9 @@ const Home: NextPage = () => {
 
   const filterArray = (filter: string) => {
     switch (filter) {
+      case "all":
+        setSortedTransactions(sortByDate(data));
+        break;
       case "credit":
       case "debit":
         setSortedTransactions(filterByType(filter));
@@ -130,7 +156,9 @@ const Home: NextPage = () => {
   };
 
   return (
-    <TransactionsContext.Provider value={{ filterArray }}>
+    <TransactionsContext.Provider
+      value={{ filterArray, data, setSortedTransactions }}
+    >
       <div className={styles.container}>
         <div className={styles.containerInner}>
           <SearchInput />
