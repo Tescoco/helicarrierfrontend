@@ -10,19 +10,9 @@ type combinedDataType = {
 }[];
 
 function SearchInput({}) {
-  const { data, setSortedTransactions } = useContext(TransactionsContext);
+  const { data, setSortedTransactions, sortByDate } =
+    useContext(TransactionsContext);
   const [combinedData, setCombinedData] = useState<combinedDataType>([]);
-
-  const sortByDate = (data: Transactions[]) => {
-    let sort = data.reduce((accumulator, transaction) => {
-      let key = transaction.date;
-      accumulator[key] = (accumulator[key] || []).concat(transaction);
-      return accumulator;
-    }, {});
-
-    let sortArray = Object.entries(sort).map((k) => k);
-    return sortArray;
-  };
 
   useEffect(() => {
     //combine array of transactions and filter it'

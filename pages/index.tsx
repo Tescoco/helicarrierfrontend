@@ -17,7 +17,7 @@ export interface Transactions {
   currencyIcon: string;
 }
 
-type SortedTransactions = [string, Transactions[]][];
+export type SortedTransactions = [string, Transactions[]][];
 
 const Home: NextPage = () => {
   const data: Transactions[] = [
@@ -84,7 +84,7 @@ const Home: NextPage = () => {
   ];
 
   const sortByDate = (data: Transactions[]) => {
-    let sort = data.reduce((accumulator, transaction) => {
+    let sort = data.reduce((accumulator: any, transaction) => {
       let key = transaction.date;
 
       // accumulator is used to group arrays with same date together
@@ -97,7 +97,8 @@ const Home: NextPage = () => {
     }, {});
 
     //turn the sort into an array
-    let sortArray = Object.entries(sort).map((k) => k);
+    console.log(sort);
+    let sortArray: any = Object.entries(sort).map((k) => k);
     return sortArray;
   };
 
@@ -157,7 +158,7 @@ const Home: NextPage = () => {
 
   return (
     <TransactionsContext.Provider
-      value={{ filterArray, data, setSortedTransactions }}
+      value={{ filterArray, data, setSortedTransactions, sortByDate }}
     >
       <div className={styles.container}>
         <div className={styles.containerInner}>
