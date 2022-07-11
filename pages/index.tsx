@@ -2,10 +2,17 @@ import type { NextPage } from "next";
 import { useEffect, useState } from "react";
 import styles from "../styles/Home.module.css";
 import { TransactionsContext } from "../utils/context/TransactionsContext";
-import FiltersContainer from "../utils/HomeComponents/FiltersContainer/FiltersContainer";
-import SearchInput from "../utils/HomeComponents/Inputs/SearchInput";
-import TransactionsContainer from "../utils/HomeComponents/Transactions/TransactionsContainer";
-import { ApolloClient, InMemoryCache, gql, useQuery } from "@apollo/client";
+import SearchInput from "@Inputs/SearchInput";
+import TransactionsContainer from "@Transactions/TransactionsContainer";
+import FiltersContainer from "@FiltersContainer/FiltersContainer";
+import { ApolloClient, InMemoryCache } from "@apollo/client";
+import {
+  filterByCurrency,
+  filterByStatus,
+  filterByType,
+  sortByDate,
+} from "@Functions/filters";
+import { GET_TRANSACTIONS } from "@Querys/transactions";
 
 export interface Transactions {
   id: number;
@@ -21,49 +28,18 @@ export interface Transactions {
 export type SortedTransactions = [string, Transactions[]][];
 
 const Home: NextPage = () => {
-  const GET_TRANSACTIONS = gql`
-    {
-      Transaction(limit: $limit) {
-        id
-        status
-        date
-        amount
-        type
-        name
-        currency
-        currencyIcon
-      }
-    }
-  `;
-
-  const sortByDate = (data: Transactions[]) => {
-    let sort = data.reduce((accumulator: any, transaction) => {
-      let key = transaction.date;
-
-      // accumulator is used to group arrays with same date together
-      // if accumulator[key] is undefined (means that the date is not in the array)
-      // we use an empty array instead
-      // now we assign accumulator[key] to bundle a transaction (with the same date) using concat
-      accumulator[key] = (accumulator[key] || []).concat(transaction);
-
-      return accumulator;
-    }, {});
-
-    //turn the sort into an array
-    let sortArray: any = Object.entries(sort).map((k) => k);
-    return sortArray;
-  };
-
-  const [sortedTransactions, setSortedTransactions] =
-    useState<SortedTransactions>([]);
-
-  const [transactions, setTransactions] = useState<Transactions[]>([]);
-
+  // create apollo client
   const client = new ApolloClient({
-    uri: "http://localhost:5000/graphql",
+    uri: process.env.NEXT_PUBLIC_GRAPHQL_URI,
     cache: new InMemoryCache(),
   });
 
+  //set states
+  const [sortedTransactions, setSortedTransactions] =
+    useState<SortedTransactions>([]);
+  const [transactions, setTransactions] = useState<Transactions[]>([]);
+
+  // when the component is mounted, we fetch the transactions
   useEffect(() => {
     client
       .query({
@@ -71,65 +47,49 @@ const Home: NextPage = () => {
         variables: { limit: 3 },
       })
       .then((result) => {
-        setTransactions([result.data.Transaction]);
-        setSortedTransactions(sortByDate([result.data.Transaction]));
+        setTransactions(result.data.allTransactions);
+        setSortedTransactions(sortByDate(result.data.allTransactions));
       });
   }, []);
 
-  const filterByType = (type: string) => {
-    let filteredTransactions = [];
-    for (let i = 0; i < transactions.length; i++) {
-      if (transactions[i].type === type) {
-        filteredTransactions.push(transactions[i]);
-      }
-    }
-    return sortByDate(filteredTransactions);
-  };
-
-  const filterByStatus = (status: string) => {
-    let filteredTransactions = [];
-    for (let i = 0; i < transactions.length; i++) {
-      if (transactions[i].status === status) {
-        filteredTransactions.push(transactions[i]);
-      }
-    }
-    return sortByDate(filteredTransactions);
-  };
-
-  const filterByCurrency = (currency: string) => {
-    let filteredTransactions = [];
-    for (let i = 0; i < transactions.length; i++) {
-      if (transactions[i].currency === currency.toUpperCase()) {
-        filteredTransactions.push(transactions[i]);
-      }
-    }
-    return sortByDate(filteredTransactions);
-  };
-
+  // A function used by filters to sort out transaction based on the type of filter
   const filterArray = (filter: string) => {
     switch (filter) {
+      // fetches all transactions
       case "all":
         setSortedTransactions(sortByDate(transactions));
         break;
+      // picks filters that are that are "debit" or "credit" and assign them the function filterByType()
       case "credit":
       case "debit":
-        setSortedTransactions(filterByType(filter));
+        setSortedTransactions(filterByType(filter, transactions));
         break;
+      // picks filters that are "completed" "pending" or "canceled" and assign them the function filterByStatus()
       case "completed":
       case "pending":
       case "canceled":
-        setSortedTransactions(filterByStatus(filter));
+        setSortedTransactions(filterByStatus(filter, transactions));
         break;
+      // picks filters that are "usd" or "ngn" and assign them the function filterByCurrency()
       case "usd":
       case "ngn":
-        setSortedTransactions(filterByCurrency(filter));
+        setSortedTransactions(filterByCurrency(filter, transactions));
         break;
     }
   };
 
   return (
+    // we use the transactionscontext to pass the filterArray function to the filters
+    // so that the filters can call it to filter the transactions
+
+    // we use the transactionscontext to pass the transactions to the SearchInput container
+    // so that the SearchInput can call it to search for transactions
+
+    // we use the transactionscontext to pass setSortedTransactions to SearchInput container
+    // so we can update the transactions when the user searches for a transaction
+
     <TransactionsContext.Provider
-      value={{ filterArray, transactions, setSortedTransactions, sortByDate }}
+      value={{ filterArray, transactions, setSortedTransactions }}
     >
       <div className={styles.container}>
         <div className={styles.containerInner}>
