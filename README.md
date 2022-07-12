@@ -50,4 +50,4 @@
 
        * id is the unique identifier for the object
        * string is all the properties of that transaction passed in a string form
-       `USD $ 2000 credit Teslim Akinremi completed`
+        [USD $ 2000 credit Teslim Akinremi completed]
