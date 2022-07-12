@@ -49,5 +49,13 @@
        * In the search container, i created an object, this object consists of an id, string, raw
 
        * id is the unique identifier for the object
-       * string is all the properties of that transaction passed in a string form
-        [USD $ 2000 credit Teslim Akinremi completed]
+       * string is all the properties of that transaction passed in a string form eg. `USD $ 2000 credit Teslim Akinremi completed`
+       * raw is the transaction in its unfiltered form.
+
+- So this what happens
+
+      * when a user inputs `credit` , `amount` or even `transaction status`, we check our array of strings,
+      * we check if it's in the string, if true,we return the raw form, then we push this result into an array, call the `sortByDate` function
+      * this function sorts our `filtered` transactions by date and we display to the client
+
+## Filters
