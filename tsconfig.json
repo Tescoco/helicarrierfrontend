@@ -14,13 +14,13 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
-    "baseUrl": "utils",
+    "baseUrl": "utils/HomeComponents",
     "paths": {
-      "@Transactions/*": ["HomeComponents/Transactions/*"],
-      "@Inputs/*": ["HomeComponents/Inputs/*"],
-      "@Functions/*": ["HomeComponents/functions/*"],
-      "@FiltersContainer/*": ["HomeComponents/FiltersContainer/*"],
-      "@Querys/*": ["HomeComponents/querys/*"]
+      "@Transactions/*": ["Transactions/*"],
+      "@Inputs/*": ["Inputs/*"],
+      "@Functions/*": ["functions/*"],
+      "@FiltersContainer/*": ["FiltersContainer/*"],
+      "@Querys/*": ["querys/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
