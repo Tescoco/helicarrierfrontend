@@ -1,3 +1,5 @@
+## Content
+
 1. Fetching transactions
 2. Sorting each transactions by date
 3. Search Container
@@ -9,7 +11,7 @@
 
 - We store the transactions with set state
 
-- After we sort 'this' transactions and we group transactions having the same dates together, then we store with set state which in turn is mapped and lists of transactions is displayed
+- After we sort 'this' transactions and we group transactions having the same dates together, then we store with set state which in turn is mapped and the lists of transactions is displayed
 
 - The task doesn't mention if the transactions are retured in an
 
@@ -17,7 +19,7 @@
 
       * or are scattered eg. 7-13-202 -> 7-11-2022 -> 7-14-2022 -> 7-12-2022
 
-      * So we assume we return from the api in an orderly fashion.
+      * So we assume the response from the api in an orderly fashion.
 
 ## Sorting each transaction by date
 
@@ -38,10 +40,10 @@
 
 ## Search Container
 
-- A key feature that would make user experience better is adding a drop down so as a user can specify what they are searing for eg.
+- A key feature that would make user experience better is adding a drop down so as a user can specify what they are searching for eg.
 
-       * either seaching by name
-       * seaching by currency
+       * either searching by name
+       * searching by currency
        * or transaction status
 
 - A user can either type `credit` or `pending`, we cannot really differentiate if `pending` is someone's name or a user is trying to find pending transactions. So this is what I did
