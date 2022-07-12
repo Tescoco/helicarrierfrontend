@@ -54,8 +54,20 @@
 
 - So this what happens
 
-      * when a user inputs `credit` , `amount` or even `transaction status`, we check our array of strings,
-      * we check if it's in the string, if true,we return the raw form, then we push this result into an array, call the `sortByDate` function
+      * when a user inputs `credit`, `amount` or even `transaction status`, we check our array of strings,
+      * we check if it's in the string, if true, we return the raw form, then we push this result into an array, call the `sortByDate` function
       * this function sorts our `filtered` transactions by date and we display to the client
 
 ## Filters
+
+- We created a function that consists of a switch statement, we are able to detect the type of filter that is passing through the function
+
+- If the user click on the credit filter, it goes to our function then check which function is available to the credit filter then calls the function and return our data to the client
+
+- Now we have the following filter functions
+
+      * filterByType -- called when either credit or debit filters are clicked
+
+      * filterByStatus -- called when either pending,canceled or completed filters are clicked
+
+      * filterByCurrency -- called when either USD or NGN filters are clicked
